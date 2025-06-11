@@ -1,0 +1,5 @@
+[
+    { "model": "tienda.rol", "pk": 1, "fields": { "nombre": "administrador" } },
+    { "model": "tienda.rol", "pk": 2, "fields": { "nombre": "vendedor" } },
+    { "model": "tienda.rol", "pk": 3, "fields": { "nombre": "cliente" } }
+  ]  

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito de Compras</title>
+    <!-- Vinculando Bootstrap -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Tu Carrito de Compras</h1>
+
+        <!-- Lista de productos -->
+        <ul class="list-group">
+            {% for item in cart_items %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>{{ item.producto.nombre }} ({{ item.cantidad }})</strong><br>
+                    <small>Precio: ${{ item.producto.costo }}</small>
+                </div>
+                <div class="btn-group">
+                    <!-- Botón para abrir el modal de actualización de cantidad -->
+                    <button class="btn btn-sm btn-warning" data-toggle="modal" data-target="#cantidadModal" data-itemid="{{ item.id }}" data-quantity="{{ item.cantidad }}">
+                        <i class="fa-solid fa-sliders"></i>
+                    </button>
+
+                    <!-- Formulario de eliminación -->
+                    <form method="POST" action="{% url 'remove_from_cart' item.id %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-outline-danger " onclick="return confirm('¿Estás seguro de que deseas eliminar este producto del carrito?')" style="margin-left: 5px;"><i class="fa-solid fa-trash"></i></button>
+                    </form>
+                </div>
+            </li>
+            {% empty %}
+            <li class="list-group-item text-center">Tu carrito está vacío.</li>
+            {% endfor %}
+        </ul>
+
+        <div class="row mt-4">
+            <div class="col-12 text-right">
+                <h4>Precio Total: ${{ total_price }}</h4>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center">
+                <a href="{% url 'seguir-comprando' %}" class="btn btn-outline-dark"><i class="fa-solid fa-circle-left"></i></a>
+                <a href="{% url 'crear_pedido' user.id%}" class="btn btn-dark"><i class="fa-solid fa-money-bill-1-wave"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para ingresar la nueva cantidad -->
+    <div class="modal fade" id="cantidadModal" tabindex="-1" role="dialog" aria-labelledby="cantidadModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cantidadModalLabel">Modificar Cantidad</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="cantidadForm" method="POST">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="cantidad">Nueva cantidad:</label>
+                            <input type="number" name="cantidad" id="cantidad" class="form-control" min="1" required>
+                            <input type="hidden" name="item_id" id="item_id">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Actualizar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vinculando Bootstrap JS (opcional, para interactividad) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        // Llenar los datos del modal con el id y cantidad del producto
+        $('#cantidadModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Botón que abrió el modal
+            var itemId = button.data('itemid'); // Extraer información de los atributos data-*
+            var quantity = button.data('quantity');
+            
+            // Colocar la cantidad y el item_id en el modal
+            var modal = $(this);
+            modal.find('#cantidad').val(quantity);
+            modal.find('#item_id').val(itemId);
+            
+            // Cambiar la acción del formulario para actualizar la cantidad
+            var formAction = "{% url 'actualizar_cantidad' 0 %}".replace('0', itemId); // Reemplazar el 0 por el item_id
+            modal.find('#cantidadForm').attr('action', formAction);
+        });
+    </script>
+
+</body>
+
+</html>

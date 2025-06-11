@@ -1,0 +1,85 @@
+{% extends 'cliente/baseCliente.html' %}
+{% block content %}
+<div class="container mt-5">
+    <!-- Encabezado -->
+    <div class="row mb-4">
+        <div class="col text-center">
+            <h1 class="text-primary">Bienvenido, {{ usuario.usuario }}</h1>
+            <p class="lead">Tu ID de usuario es: <strong>{{ usuario.id }}</strong></p>
+        </div>
+    </div>
+
+    <!-- Carrito de compras -->
+    <h2>Revisa tu compra</h2>
+    <div class="mt-4">
+        {% if carrito_items %}
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Precio Unitario</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in carrito_items %}
+                        <tr>
+                            <td>{{ item.producto.nombre }}</td>
+                            <td>{{ item.cantidad }}</td>
+                            <td>${{ item.producto.costo }}</td>
+                            <td>${{ item.get_total_price }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <!-- Mostrar el total del carrito -->
+            <div class="text-right mt-4">
+                <h4>Total: ${{ carrito_total }}</h4>
+            </div>
+
+            <!-- Formulario para dirección y método de pago -->
+            <form method="post" action="{% url 'confirmar_pedido' usuario.id %}">
+                {% csrf_token %}
+                <!-- Selección de dirección -->
+                <div class="mt-4">
+                    <h4>Selecciona una dirección de envío</h4>
+                    <div class="form-group">
+                        <select class="form-control" name="direccion" id="direccion">
+                            {% for direccion in usuario.direccion_set.all %}
+                                <option value="{{ direccion.id }}" {% if direccion.es_principal %}selected{% endif %}>
+                                    {{ direccion.calle }} {{ direccion.noExt }}, {{ direccion.ciudad }}, {{ direccion.estado }}
+                                </option>
+                            {% empty %}
+                                <option value="" disabled>No tienes direcciones guardadas.</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Método de pago -->
+                <div class="mt-4">
+                    <h4>Selecciona el método de pago</h4>
+                    <div class="form-group">
+                        <select class="form-control" name="metodo_pago" id="metodo_pago">
+                            <option value="tarjeta">Tarjeta de Crédito/Débito</option>
+                            <option value="paypal">PayPal</option>
+                            <option value="transferencia">Transferencia Bancaria</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Botones para cancelar o confirmar -->
+                <div class="mt-4 text-center">
+                    <button type="submit" class="btn btn-success">Confirmar Compra</button>
+                    <a href="{% url 'carrito' %}" class="btn btn-danger">Cancelar</a>
+                </div>
+            </form>
+
+        {% else %}
+            <p>Tu carrito está vacío. No puedes proceder con la compra.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

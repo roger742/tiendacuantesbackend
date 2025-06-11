@@ -1,0 +1,53 @@
+{% extends 'vendedor/baseVendedor.html' %}
+
+{% block content %}
+<h2>Crear Producto</h2>
+
+{% if error %}
+  <div class="alert alert-danger">
+    {{ error }}
+  </div>
+{% endif %}
+
+<form method="post">
+  {% csrf_token %}
+  <div class="form-group">
+    <label for="nombre">Nombre del Producto</label>
+    <input type="text" class="form-control" id="nombre" name="nombre" required>
+  </div>
+
+  <div class="form-group">
+    <label for="descripcion">Descripción</label>
+    <textarea class="form-control" id="descripcion" name="descripcion" required></textarea>
+  </div>
+
+  <div class="form-group">
+    <label for="costo">Costo</label>
+    <input 
+      type="number" 
+      class="form-control" 
+      id="costo" 
+      name="costo" 
+      step="0.01" 
+      min="0" 
+      required>
+  </div>
+
+  <div class="form-group">
+    <label for="stock">Stock</label>
+    <input type="number" class="form-control" id="stock" name="stock" required>
+  </div>
+
+  <div class="form-group">
+    <label for="categoria">Categoría</label>
+    <select class="form-control" id="categoria" name="categoria" required>
+      <option value="" disabled selected>Seleccione una categoría</option>
+      {% for categoria in categorias %}
+        <option value="{{ categoria.id }}">{{ categoria.nombre }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <button type="submit" class="btn btn-primary mt-4"><i class="fa-solid fa-circle-plus"></i></button>
+</form>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends 'vendedor/baseVendedor.html' %}
+
+{% block content %}
+<h2>Gestión de Productos</h2>
+
+<!-- Mostrar mensajes de éxito o error -->
+<div>
+    {% if messages %}
+    <div class="alert alert-warning">
+        {% for message in messages %}
+        <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+<a href="{% url 'crearProductoVendedor' %}">
+    <button class="btn btn-primary btn-block btn-lg"><i class="fa-solid fa-circle-plus"></i></button>
+</a>
+<h3 class="mt-4">Productos Existentes</h3>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Stock</th>
+            <th>Costo</th>
+            <th>Categoria</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for producto in productos %}
+        <tr>
+            <td>{{ producto.id }}</td>
+            <td>{{ producto.nombre }}</td>
+            <td>{{ producto.descripcion }}</td>
+            <td>{{ producto.stock }}</td>
+            <td>{{ producto.costo }}</td>
+            <td>{{ producto.categoria.nombre }}</td>
+            <td>
+                <a href="{% url 'modificarProductoVendedor' producto.id %}">
+                    <button class="btn btn-warning" style="margin-right: 4px;"><i class="fa-solid fa-sliders"></i></button>
+                </a>
+                <a href="{% url 'eliminarProductoVendedor' producto.id %}">
+                    <button class="btn btn-danger"><i class="fa-solid fa-trash"></i></button>
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

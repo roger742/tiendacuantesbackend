@@ -1,0 +1,32 @@
+{% extends 'administrador/baseAdmin.html' %}
+
+{% block title %}Eliminación de Cliente{% endblock %}
+
+{% block content %}
+<!-- eliminarClienteAdmin.html -->
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-danger text-white">
+                    <h3 class="mb-0">Confirmar eliminacion</h3>
+                </div>
+                <div class="card-body">
+                    <h4>¿Seguro que deseas desactivar a <strong>{{ cliente.nombre }}</strong>?</h4>
+                    <p><strong>Usuario:</strong> {{ cliente.usuario }}</p>
+                    <p><strong>Email:</strong> {{ cliente.correo }}</p>
+                    
+                    <!-- Formulario para confirmar la eliminación -->
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-danger">Eliminar Cliente</button>
+                            <a href="{% url 'gestionarClientesAdmin' %}" class="btn btn-secondary">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

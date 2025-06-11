@@ -1,0 +1,62 @@
+{% extends 'vendedor/baseVendedor.html' %}
+
+{% block content %}
+    <!-- Contenido específico para el vendedor -->
+    <h2>Productos Vendidos</h2>
+    {% if productos_vendedor %}
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID Producto</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Costo</th>
+                    <th>Stock</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for producto in productos_vendedor %}
+                    <tr>
+                        <td>{{ producto.id }}</td>
+                        <td>{{ producto.nombre }}</td>
+                        <td>{{ producto.descripcion }}</td>
+                        <td>{{ producto.costo }}</td>
+                        <td>{{ producto.stock }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No tienes productos registrados.</p>
+    {% endif %}
+
+    <h2>Pedidos del Vendedor</h2>
+    {% if detalles_pedidos %}
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID Pedido</th>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio Total</th>
+                    <th>Gestion Pedido</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for detalles in detalles_pedidos %}
+                    {% for detalle in detalles %}
+                        <tr>
+                            <td>{{ detalle.pedido.id }}</td>
+                            <td>{{ detalle.producto.nombre }}</td>
+                            <td>{{ detalle.cantidad }}</td>
+                            <td>{{ detalle.precio_total }}</td>
+                            <td><a href="{% url 'verPedidoDetalles' detalle.pedido.id usuario.id%}" class="btn btn-primary"><i class="fa-solid fa-circle-info"></i></td>
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No tienes pedidos registrados.</p>
+    {% endif %}
+{% endblock %}

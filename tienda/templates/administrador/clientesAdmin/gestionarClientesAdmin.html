@@ -1,0 +1,37 @@
+{% extends 'administrador/baseAdmin.html' %}
+
+{% block title %}Gestión de Clientes{% endblock %}
+
+{% block content %}
+<h2>Gestión de Clientes</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Usuario</th>
+            <th>Correo</th>
+            <th>Activo/Inactivo</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for cliente in clientes %}
+        <tr>
+            <td>{{ cliente.usuario }}</td>
+            <td>{{ cliente.correo }}</td>
+            <td>{{ cliente.is_active|yesno:"Activo,Inactivo" }}</td>
+            <td> 
+                <a href="{% url 'eliminarClientesAdmin' cliente.id %}">
+                    <button class="btn btn-danger"><i class="fa-solid fa-trash"></i></button>
+                </a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="7">No hay clientes registrados.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

@@ -1,0 +1,31 @@
+<!-- templates/administrador/categoriasAdmin/gestionarCategoriasAdmin.html -->
+
+{% extends 'administrador/baseAdmin.html' %}
+
+{% block content %}
+  <h2>Gestión de productos</h2>
+
+
+  <h3 class="mt-4">Productos Existentes</h3>
+  <table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Categoria</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for producto in productos %}
+        <tr>
+            <td>{{ producto.id }}</td>
+            <td>{{ producto.nombre }}</td>
+            <td>{{ producto.descripcion }}</td>
+            <td>{{ producto.categoria.nombre }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
